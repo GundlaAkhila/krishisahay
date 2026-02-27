@@ -1,0 +1,123 @@
+<! <!DOCTYPE html>
+<html>
+<head>
+  <title>KrishiSahay - AI Farming Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f9f4;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: green;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 15px auto;
+      width: 350px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      width: 90%;
+    }
+
+    button {
+      background-color: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: darkgreen;
+    }
+
+    #output {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🌾 KrishiSahay AI</h1>
+<p>Your Digital Farming Assistant</p>
+
+<!-- WEATHER SECTION -->
+<div class="card">
+  <h3>🌦 Weather Advice</h3>
+  <input id="city" placeholder="Enter city">
+  <button onclick="getWeather()">Check Weather</button>
+</div>
+
+<!-- GOVERNMENT SCHEME SECTION -->
+<div class="card">
+  <h3>📜 Government Scheme Info</h3>
+  <input id="scheme" placeholder="Enter scheme (pmkisan / fasalbima / soilcard)">
+  <button onclick="getScheme()">Get Scheme Info</button>
+</div>
+
+<!-- AI QUESTION SECTION -->
+<div class="card">
+  <h3>🤖 Ask Farming Question</h3>
+  <input id="question" placeholder="Ask about crops, fertilizer, pests...">
+  <button onclick="askAI()">Ask AI</button>
+</div>
+
+<!-- DISEASE DETECTION SECTION -->
+<div class="card">
+  <h3>🌿 Crop Disease Detection</h3>
+  <input type="file" id="imageUpload">
+  <button onclick="uploadImage()">Upload Image</button>
+</div>
+
+<p id="output"></p>
+
+<script>
+
+async function getWeather() {
+  let city = document.getElementById("city").value;
+  let res = await fetch(`http://127.0.0.1:8000/weather/${city}`);
+  let data = await res.json();
+
+  document.getElementById("output").innerText =
+    "Temperature: " + data.temperature +
+    " | Humidity: " + data.humidity +
+    " | Advice: " + data.advice;
+}
+
+async function getScheme() {
+  let scheme = document.getElementById("scheme").value;
+  let res = await fetch(`http://127.0.0.1:8000/scheme/${scheme}`);
+  let data = await res.json();
+
+  document.getElementById("output").innerText = data.info;
+}
+
+async function askAI() {
+  let question = document.getElementById("question").value;
+  let res = await fetch(`http://127.0.0.1:8000/ask/${question}`);
+  let data = await res.json();
+
+  document.getElementById("output").innerText = data.answer;
+}
+
+async function uploadImage() {
+  document.getElementById("output").innerText =
+    "Disease detection feature connected to backend model (demo placeholder).";
+}
+
+</script>
+
+</body>
+</html>
