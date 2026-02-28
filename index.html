@@ -1,120 +1,139 @@
-<! <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-  <title>KrishiSahay - AI Farming Assistant</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f9f4;
-      text-align: center;
-      padding: 20px;
-    }
+    <title>KrishiSahay AI Assistant</title>
 
-    h1 {
-      color: green;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f9f4;
+        }
 
-    .card {
-      background: white;
-      padding: 20px;
-      margin: 15px auto;
-      width: 350px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-    }
+        .header {
+            background-color: #2e8b57;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 26px;
+            font-weight: bold;
+        }
 
-    input, button {
-      padding: 8px;
-      margin: 5px;
-      width: 90%;
-    }
+        .container {
+            width: 70%;
+            margin: auto;
+            margin-top: 20px;
+        }
 
-    button {
-      background-color: green;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 6px solid #2e8b57;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
 
-    button:hover {
-      background-color: darkgreen;
-    }
+        h2 {
+            color: #2e8b57;
+        }
 
-    #output {
-      margin-top: 15px;
-      font-weight: bold;
-      color: #333;
-    }
-  </style>
+        input {
+            padding: 8px;
+            width: 220px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            background-color: #2e8b57;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #246b45;
+        }
+
+        p {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>🌾 KrishiSahay AI</h1>
-<p>Your Digital Farming Assistant</p>
-
-<!-- WEATHER SECTION -->
-<div class="card">
-  <h3>🌦 Weather Advice</h3>
-  <input id="city" placeholder="Enter city">
-  <button onclick="getWeather()">Check Weather</button>
+<div class="header">
+    🌾 KrishiSahay AI Assistant
 </div>
 
-<!-- GOVERNMENT SCHEME SECTION -->
-<div class="card">
-  <h3>📜 Government Scheme Info</h3>
-  <input id="scheme" placeholder="Enter scheme (pmkisan / fasalbima / soilcard)">
-  <button onclick="getScheme()">Get Scheme Info</button>
-</div>
+<div class="container">
 
-<!-- AI QUESTION SECTION -->
-<div class="card">
-  <h3>🤖 Ask Farming Question</h3>
-  <input id="question" placeholder="Ask about crops, fertilizer, pests...">
-  <button onclick="askAI()">Ask AI</button>
-</div>
+    <div class="section">
+        <h2>Ask Farming Question</h2>
+        <input type="text" id="question" placeholder="Ask question">
+        <button onclick="askAI()">Ask</button>
+        <p id="aiResult"></p>
+    </div>
 
-<!-- DISEASE DETECTION SECTION -->
-<div class="card">
-  <h3>🌿 Crop Disease Detection</h3>
-  <input type="file" id="imageUpload">
-  <button onclick="uploadImage()">Upload Image</button>
-</div>
+    <div class="section">
+        <h2>Check Weather</h2>
+        <input type="text" id="city" placeholder="Enter city">
+        <button onclick="getWeather()">Get Weather</button>
+        <p id="weatherResult"></p>
+    </div>
 
-<p id="output"></p>
+    <div class="section">
+        <h2>Pesticide Suggestion</h2>
+        <input type="text" id="crop" placeholder="Enter crop">
+        <button onclick="getPesticide()">Get Pesticide</button>
+        <p id="pesticideResult"></p>
+    </div>
+
+    <div class="section">
+        <h2>Crop Recommendation</h2>
+        <input type="text" id="soil" placeholder="Enter soil type">
+        <button onclick="getCrop()">Recommend</button>
+        <p id="cropResult"></p>
+    </div>
+
+</div>
 
 <script>
 
-async function getWeather() {
-  let city = document.getElementById("city").value;
-  let res = await fetch(`http://127.0.0.1:8000/weather/${city}`);
-  let data = await res.json();
-
-  document.getElementById("output").innerText =
-    "Temperature: " + data.temperature +
-    " | Humidity: " + data.humidity +
-    " | Advice: " + data.advice;
-}
-
-async function getScheme() {
-  let scheme = document.getElementById("scheme").value;
-  let res = await fetch(`http://127.0.0.1:8000/scheme/${scheme}`);
-  let data = await res.json();
-
-  document.getElementById("output").innerText = data.info;
-}
-
 async function askAI() {
-  let question = document.getElementById("question").value;
-  let res = await fetch(`http://127.0.0.1:8000/ask/${question}`);
-  let data = await res.json();
-
-  document.getElementById("output").innerText = data.answer;
+    const question = document.getElementById("question").value;
+    const response = await fetch(`/ask/${question}`);
+    const data = await response.json();
+    document.getElementById("aiResult").innerText = data.answer;
 }
 
-async function uploadImage() {
-  document.getElementById("output").innerText =
-    "Disease detection feature connected to backend model (demo placeholder).";
+async function getWeather() {
+    const city = document.getElementById("city").value;
+    const response = await fetch(`/weather/${city}`);
+    const data = await response.json();
+    document.getElementById("weatherResult").innerText =
+        `Temperature: ${data.temperature}°C | Humidity: ${data.humidity}% | Condition: ${data.description}`;
+}
+
+async function getPesticide() {
+    const crop = document.getElementById("crop").value;
+    const response = await fetch(`/pesticide/${crop}`);
+    const data = await response.json();
+    document.getElementById("pesticideResult").innerText = data.solution;
+}
+
+async function getCrop() {
+    const soil = document.getElementById("soil").value;
+    const response = await fetch(`/crop/${soil}`);
+    const data = await response.json();
+    document.getElementById("cropResult").innerText = data.crop;
 }
 
 </script>
